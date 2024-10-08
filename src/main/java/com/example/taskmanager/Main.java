@@ -1,8 +1,8 @@
 package com.example.taskmanager;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +12,19 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         // Adding tasks interactively
+        addTasksInteractively(taskManager, scanner);
+
+        // Display all tasks
+        displayTasks(taskManager.getAllTasks());
+
+        // Allow users to update or delete tasks
+        manageTasksInteractively(taskManager, scanner);
+
+        scanner.close();
+    }
+
+    // Method to add tasks interactively
+    private static void addTasksInteractively(TaskManager taskManager, Scanner scanner) {
         while (true) {
             System.out.println("\nEnter a new task:");
 
@@ -28,8 +41,8 @@ public class Main {
             LocalDate dueDate = null;
             try {
                 dueDate = LocalDate.parse(scanner.nextLine());
-            } catch (DateTimeException e) {
-                System.out.print("Invalid date format. Please try again.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please try again.");
                 continue;
             }
 
@@ -50,13 +63,6 @@ public class Main {
                 break;
             }
         }
-
-        // Display all tasks
-        System.out.println("\nAll Tasks:");
-        // Display tasks in a table-like format
-        displayTasks(taskManager.getAllTasks());
-
-        scanner.close();
     }
 
     // Method to display tasks in a table format
@@ -85,6 +91,59 @@ public class Main {
                     task.getStatus(),
                     task.getCreatedDate().format(dateFormatter)
             );
+        }
+    }
+
+    // Method to manage (update/delete) tasks interactively
+    private static void manageTasksInteractively(TaskManager taskManager, Scanner scanner) {
+        while (true) {
+            System.out.println("\nDo you want to update or delete a task? (update/delete/exit): ");
+            String action = scanner.nextLine();
+
+            if (action.equalsIgnoreCase("exit")) {
+                break;
+            }
+
+            System.out.print("Enter Task ID: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            if (action.equalsIgnoreCase("update")) {
+                // Update task
+                System.out.print("New Title: ");
+                String newTitle = scanner.nextLine();
+
+                System.out.print("New Description: ");
+                String newDescription = scanner.nextLine();
+
+                System.out.print("New Due Date (YYYY-MM-DD): ");
+                LocalDate newDueDate = LocalDate.parse(scanner.nextLine());
+
+                System.out.print("New Priority (1 = High, 2 = Medium, 3 = Low): ");
+                int newPriority = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("New Status (Pending, In Progress, Completed): ");
+                String newStatus = scanner.nextLine();
+
+                boolean updated = taskManager.updateTask(id, newTitle, newDescription, newDueDate, newPriority, newStatus);
+                if (updated) {
+                    System.out.println("Task updated successfully!");
+                } else {
+                    System.out.println("Task not found!");
+                }
+            } else if (action.equalsIgnoreCase("delete")) {
+                // Delete task
+                boolean deleted = taskManager.deleteTask(id);
+                if (deleted) {
+                    System.out.println("Task deleted successfully!");
+                } else {
+                    System.out.println("Task not found!");
+                }
+            } else {
+                System.out.println("Invalid action. Please choose 'update' or 'delete'.");
+            }
+
+            // Display updated tasks
+            displayTasks(taskManager.getAllTasks());
         }
     }
 }
