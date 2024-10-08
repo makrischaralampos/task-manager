@@ -28,14 +28,11 @@ public class TaskManager {
     }
 
     // Update a task
-    public boolean updateTask(int id, String newTitle, String newDescription, int newPriority, LocalDate newDueDate) {
+    public boolean updateTask(int id, String newTitle, String newDescription, LocalDate newDueDate, int newPriority, String newStatus) {
         Optional<Task> taskOptional = getTaskById(id);
         if (taskOptional.isPresent()) {
             Task task = taskOptional.get();
-            task.setTitle(newTitle);
-            task.setDescription(newDescription);
-            task.setPriority(newPriority);
-            task.setDueDate(newDueDate);
+            task.updateTask(newTitle, newDescription, newDueDate, newPriority, newStatus);
             return true;
         }
         return false;
@@ -44,5 +41,16 @@ public class TaskManager {
     // Delete a task
     public boolean deleteTask(int id) {
         return tasks.removeIf(task -> task.getId() == id);
+    }
+
+    // Find all tasks with a specific status
+    public List<Task> getTasksByStatus(String status) {
+        List<Task> result = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getStatus().equalsIgnoreCase(status)) {
+                result.add(task);
+            }
+        }
+        return result;
     }
 }
