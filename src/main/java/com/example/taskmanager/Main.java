@@ -1,31 +1,58 @@
 package com.example.taskmanager;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
+        Scanner scanner = new Scanner(System.in);
 
-        // Adding tasks
-        taskManager.addTask(new Task(1, "Complete project", "Finish the task manager project", LocalDate.of(2024, 10, 10), 1, "Pending"));
-        taskManager.addTask(new Task(2, "Buy groceries", "Get milk, eggs, and bread", LocalDate.of(2024, 10, 8), 2, "In Progress"));
+        // Adding tasks interactively
+        while (true) {
+            System.out.println("\nEnter a new task:");
 
-        // Viewing all tasks
-        System.out.println("All Tasks:");
+            System.out.print("Task ID: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Title: ");
+            String title = scanner.nextLine();
+
+            System.out.print("Description: ");
+            String description = scanner.nextLine();
+
+            System.out.print("Due Date (YYYY-MM-DD): ");
+            LocalDate dueDate = null;
+            try {
+                dueDate = LocalDate.parse(scanner.nextLine());
+            } catch (DateTimeException e) {
+                System.out.print("Invalid date format. Please try again.");
+                continue;
+            }
+
+            System.out.print("Priority (1 = High, 2 = Medium, 3 = Low): ");
+            int priority = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Status (Pending, In Progress, Completed): ");
+            String status = scanner.nextLine();
+
+            // Add task to the task manager
+            Task newTask = new Task(id, title, description, dueDate, priority, status);
+            taskManager.addTask(newTask);
+            System.out.println("Task added successfully!");
+
+            System.out.print("Do you want to add another task? (yes/no): ");
+            String addAnother = scanner.nextLine();
+            if (!addAnother.equalsIgnoreCase("yes")) {
+                break;
+            }
+        }
+
+        // Display all tasks
+        System.out.println("\nAll Tasks:");
         taskManager.getAllTasks().forEach(System.out::println);
 
-        // Updating a task
-        taskManager.updateTask(1, "Complete project with tests", "Finish the project and write unit tests", LocalDate.of(2024, 10, 12), 1, "In Progress");
-
-        // Filtering tasks by status
-        System.out.println("\nTasks with status 'In Progress':");
-        taskManager.getTasksByStatus("In Progress").forEach(System.out::println);
-
-        // Deleting a task
-        taskManager.deleteTask(2);
-
-        // Viewing all tasks after update and delete
-        System.out.println("\nUpdated Tasks:");
-        taskManager.getAllTasks().forEach(System.out::println);
+        scanner.close();
     }
 }
