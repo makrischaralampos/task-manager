@@ -2,8 +2,10 @@ package com.example.taskmanager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TaskManager {
     private List<Task> tasks;
@@ -58,5 +60,19 @@ public class TaskManager {
             }
         }
         return result;
+    }
+
+    // Method to sort tasks by priority
+    public List<Task> sortByPriority() {
+        return tasks.stream()
+                .sorted(Comparator.comparingInt(Task::getPriority))
+                .collect(Collectors.toList());
+    }
+
+    // Method to sort tasks by due date
+    public List<Task> sortByDueDate() {
+        return tasks.stream()
+                .sorted(Comparator.comparing(Task::getDueDate))
+                .collect(Collectors.toList());
     }
 }

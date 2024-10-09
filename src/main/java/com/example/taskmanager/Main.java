@@ -103,75 +103,97 @@ public class Main {
     // Method to manage (update/delete) tasks interactively
     private static void manageTasksInteractively(TaskManager taskManager, Scanner scanner) {
         while (true) {
-            System.out.println("\nDo you want to update or delete a task? (update/delete/exit): ");
+            System.out.println("\nChoose an action: add, update, delete, view, sort, or exit: ");
             String action = scanner.nextLine();
 
             if (action.equalsIgnoreCase("exit")) {
                 break;
             }
 
-            System.out.print("Enter Task ID: ");
-            int id = -1;
-            try {
-                id = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Invalid Task ID. Please enter a valid number.");
-                continue;
-            }
-
-            if (action.equalsIgnoreCase("update")) {
-                // Update task
-                System.out.print("New Title: ");
-                String newTitle = scanner.nextLine();
-
-                System.out.print("New Description: ");
-                String newDescription = scanner.nextLine();
-
-                System.out.print("New Due Date (YYYY-MM-DD): ");
-                LocalDate newDueDate = null;
-                try {
-                    newDueDate = LocalDate.parse(scanner.nextLine());
-                } catch (DateTimeParseException e) {
-                    System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
-                    continue;
-                }
-
-                System.out.print("New Priority (1 = High, 2 = Medium, 3 = Low): ");
-                int newPriority = -1;
-                try {
-                    newPriority = Integer.parseInt(scanner.nextLine());
-                    if (newPriority < 1 || newPriority > 3) {
-                        System.out.println("Error: Priority must be between 1 and 3.");
-                        continue;
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Invalid priority. Please enter a number between 1 and 3.");
-                    continue;
-                }
-
-                System.out.print("New Status (Pending, In Progress, Completed): ");
-                String newStatus = scanner.nextLine();
-
-                boolean updated = taskManager.updateTask(id, newTitle, newDescription, newDueDate, newPriority, newStatus);
-                if (updated) {
-                    System.out.println("Task updated successfully!");
-                } else {
-                    System.out.println("Task not found!");
-                }
+            if (action.equalsIgnoreCase("add")) {
+                addTasksInteractively(taskManager, scanner);
+            } else if (action.equalsIgnoreCase("update")) {
+                updateTaskInteractively(taskManager, scanner);
             } else if (action.equalsIgnoreCase("delete")) {
-                // Delete task
-                boolean deleted = taskManager.deleteTask(id);
-                if (deleted) {
-                    System.out.println("Task deleted successfully!");
+                deleteTaskInteractively(taskManager, scanner);
+            } else if (action.equalsIgnoreCase("view")) {
+                displayTasks(taskManager.getAllTasks());
+            } else if (action.equalsIgnoreCase("sort")) {
+                System.out.println("Sort tasks by: (priority/due date): ");
+                String sortOption = scanner.nextLine();
+
+                if (sortOption.equalsIgnoreCase("priority")) {
+                    displayTasks(taskManager.sortByPriority());
+                } else if (sortOption.equalsIgnoreCase("due date")) {
+                    displayTasks(taskManager.sortByDueDate());
                 } else {
-                    System.out.println("Task not found!");
+                    System.out.println("Invalid sort option.");
                 }
             } else {
-                System.out.println("Invalid action. Please choose 'update' or 'delete'.");
+                System.out.println("Invalid action. Please try again.");
             }
+        }
+    }
 
-            // Display updated tasks
-            displayTasks(taskManager.getAllTasks());
+    private static void updateTaskInteractively(TaskManager taskManager, Scanner scanner) {
+        System.out.print("Enter Task ID: ");
+        int id = -1;
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid Task ID. Please enter a valid number.");
+        }
+
+        System.out.print("New Title: ");
+        String newTitle = scanner.nextLine();
+
+        System.out.print("New Description: ");
+        String newDescription = scanner.nextLine();
+
+        System.out.print("New Due Date (YYYY-MM-DD): ");
+        LocalDate newDueDate = null;
+        try {
+            newDueDate = LocalDate.parse(scanner.nextLine());
+        } catch (DateTimeParseException e) {
+            System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
+        }
+
+        System.out.print("New Priority (1 = High, 2 = Medium, 3 = Low): ");
+        int newPriority = -1;
+        try {
+            newPriority = Integer.parseInt(scanner.nextLine());
+            if (newPriority < 1 || newPriority > 3) {
+                System.out.println("Error: Priority must be between 1 and 3.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid priority. Please enter a number between 1 and 3.");
+        }
+
+        System.out.print("New Status (Pending, In Progress, Completed): ");
+        String newStatus = scanner.nextLine();
+
+        boolean updated = taskManager.updateTask(id, newTitle, newDescription, newDueDate, newPriority, newStatus);
+        if (updated) {
+            System.out.println("Task updated successfully!");
+        } else {
+            System.out.println("Task not found!");
+        }
+    }
+
+    private static void deleteTaskInteractively(TaskManager taskManager, Scanner scanner) {
+        System.out.print("Enter Task ID: ");
+        int id = -1;
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid Task ID. Please enter a valid number.");
+        }
+
+        boolean deleted = taskManager.deleteTask(id);
+        if (deleted) {
+            System.out.println("Task deleted successfully!");
+        } else {
+            System.out.println("Task not found!");
         }
     }
 }
