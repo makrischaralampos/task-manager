@@ -29,7 +29,13 @@ public class Main {
             System.out.println("\nEnter a new task:");
 
             System.out.print("Task ID: ");
-            int id = Integer.parseInt(scanner.nextLine());
+            int id = -1;
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Invalid Task ID. Please enter a valid number.");
+                continue;
+            }
 
             System.out.print("Title: ");
             String title = scanner.nextLine();
@@ -105,7 +111,13 @@ public class Main {
             }
 
             System.out.print("Enter Task ID: ");
-            int id = Integer.parseInt(scanner.nextLine());
+            int id = -1;
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Invalid Task ID. Please enter a valid number.");
+                continue;
+            }
 
             if (action.equalsIgnoreCase("update")) {
                 // Update task
@@ -116,10 +128,26 @@ public class Main {
                 String newDescription = scanner.nextLine();
 
                 System.out.print("New Due Date (YYYY-MM-DD): ");
-                LocalDate newDueDate = LocalDate.parse(scanner.nextLine());
+                LocalDate newDueDate = null;
+                try {
+                    newDueDate = LocalDate.parse(scanner.nextLine());
+                } catch (DateTimeParseException e) {
+                    System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
+                    continue;
+                }
 
                 System.out.print("New Priority (1 = High, 2 = Medium, 3 = Low): ");
-                int newPriority = Integer.parseInt(scanner.nextLine());
+                int newPriority = -1;
+                try {
+                    newPriority = Integer.parseInt(scanner.nextLine());
+                    if (newPriority < 1 || newPriority > 3) {
+                        System.out.println("Error: Priority must be between 1 and 3.");
+                        continue;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Invalid priority. Please enter a number between 1 and 3.");
+                    continue;
+                }
 
                 System.out.print("New Status (Pending, In Progress, Completed): ");
                 String newStatus = scanner.nextLine();

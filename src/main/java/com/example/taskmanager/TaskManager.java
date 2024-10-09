@@ -34,13 +34,19 @@ public class TaskManager {
             Task task = taskOptional.get();
             task.updateTask(newTitle, newDescription, newDueDate, newPriority, newStatus);
             return true;
+        } else {
+            System.out.println("Error: Task with ID " + id + " does not exist.");
+            return false;
         }
-        return false;
     }
 
     // Delete a task
     public boolean deleteTask(int id) {
-        return tasks.removeIf(task -> task.getId() == id);
+        boolean removed = tasks.removeIf(task -> task.getId() == id);
+        if (!removed) {
+            System.out.println("Error: Task with ID " + id + " does not exist.");
+        }
+        return removed;
     }
 
     // Find all tasks with a specific status
