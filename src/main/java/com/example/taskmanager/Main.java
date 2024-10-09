@@ -103,7 +103,7 @@ public class Main {
     // Method to manage (update/delete) tasks interactively
     private static void manageTasksInteractively(TaskManager taskManager, Scanner scanner) {
         while (true) {
-            System.out.println("\nChoose an action: add, update, delete, view, sort, or exit: ");
+            System.out.println("\nChoose an action: add, update, delete, view, sort, filter, or exit: ");
             String action = scanner.nextLine();
 
             if (action.equalsIgnoreCase("exit")) {
@@ -119,15 +119,17 @@ public class Main {
             } else if (action.equalsIgnoreCase("view")) {
                 displayTasks(taskManager.getAllTasks());
             } else if (action.equalsIgnoreCase("sort")) {
-                System.out.println("Sort tasks by: (priority/due date): ");
-                String sortOption = scanner.nextLine();
+                sortTasksInteractively(taskManager, scanner);
+            } else if (action.equalsIgnoreCase("filter")) {
+                System.out.println("Filter tasks by: (high priority/this week): ");
+                String filterOption = scanner.nextLine();
 
-                if (sortOption.equalsIgnoreCase("priority")) {
-                    displayTasks(taskManager.sortByPriority());
-                } else if (sortOption.equalsIgnoreCase("due date")) {
-                    displayTasks(taskManager.sortByDueDate());
+                if (filterOption.equalsIgnoreCase("high priority")) {
+                    displayTasks(taskManager.filterByHighPriority());
+                } else if (filterOption.equalsIgnoreCase("this week")) {
+                    displayTasks(taskManager.filterByDueThisWeek());
                 } else {
-                    System.out.println("Invalid sort option.");
+                    System.out.println("Invalid filter option");
                 }
             } else {
                 System.out.println("Invalid action. Please try again.");
@@ -194,6 +196,19 @@ public class Main {
             System.out.println("Task deleted successfully!");
         } else {
             System.out.println("Task not found!");
+        }
+    }
+
+    private static void sortTasksInteractively(TaskManager taskManager, Scanner scanner) {
+        System.out.println("Sort tasks by: (priority/due date): ");
+        String sortOption = scanner.nextLine();
+
+        if (sortOption.equalsIgnoreCase("priority")) {
+            displayTasks(taskManager.sortByPriority());
+        } else if (sortOption.equalsIgnoreCase("due date")) {
+            displayTasks(taskManager.sortByDueDate());
+        } else {
+            System.out.println("Invalid sort option.");
         }
     }
 }

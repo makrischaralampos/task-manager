@@ -75,4 +75,20 @@ public class TaskManager {
                 .sorted(Comparator.comparing(Task::getDueDate))
                 .collect(Collectors.toList());
     }
+
+    // Method to filter tasks by high priority (Priority 1)
+    public List<Task> filterByHighPriority() {
+        return tasks.stream()
+                .filter(task -> task.getPriority() == 1)
+                .collect(Collectors.toList());
+    }
+
+    // Method to filter tasks due within the next week
+    public List<Task> filterByDueThisWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekLater = today.plusDays(7);
+        return tasks.stream()
+                .filter(task -> !task.getDueDate().isBefore(today) && !task.getDueDate().isAfter(oneWeekLater))
+                .collect(Collectors.toList());
+    }
 }
