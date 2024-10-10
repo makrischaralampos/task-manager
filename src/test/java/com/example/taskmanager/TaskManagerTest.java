@@ -52,9 +52,9 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testDeleteNonExistentTask() {
-        boolean deleted = taskManager.deleteTask(999);
-        assertFalse(deleted);
+    public void testDeleteTaskWithInvalidId() {
+        boolean result = taskManager.deleteTask(999);
+        assertFalse(result);
     }
 
     @Test
@@ -103,5 +103,57 @@ public class TaskManagerTest {
         List<Task> filteredTasks = taskManager.filterByDueThisWeek();
         assertEquals(1, filteredTasks.size());
         assertEquals(task1, filteredTasks.get(0));
+    }
+
+    @Test
+    public void testEmptyTaskList() {
+        List<Task> tasks = taskManager.getAllTasks();
+        assertEquals(0, tasks.size());
+    }
+
+    @Test
+    public void testAddTaskWithNullTitle() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.addTask(new Task(1, null, "Description", LocalDate.now(), 1, "Pending"));
+        });
+    }
+
+    @Test
+    public void testAddTaskWithNullDescription() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.addTask(new Task(1, "Title", null, LocalDate.now(), 1, "Pending"));
+        });
+    }
+
+    @Test
+    public void testUpdateTaskWithInvalidId() {
+        boolean result = taskManager.updateTask(999, "New Title", "New Description", LocalDate.now(), 1, "Pending");
+        assertFalse(result);
+    }
+
+    @Test
+    public void testUpdateTaskWithNullTitle() {
+        taskManager.addTask(new Task(1, "Task 1", "Description 1", LocalDate.now(), 1, "Pending"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.updateTask(1, null, "Updated Description", LocalDate.now(), 1, "In Progress");
+        });
+    }
+
+    @Test
+    public void testSortTasksWithEmptyList() {
+        List<Task> sortedByPriority = taskManager.sortByPriority();
+        assertEquals(0, sortedByPriority.size());
+
+        List<Task> sortedByDueDate = taskManager.sortByDueDate();
+        assertEquals(0, sortedByDueDate.size());
+    }
+
+    @Test
+    public void testFilterTasksWithEmptyList() {
+        List<Task> filteredByPriority = taskManager.filterByHighPriority();
+        assertEquals(0, filteredByPriority.size());
+
+        List<Task> filteredByDueDate = taskManager.filterByDueThisWeek();
+        assertEquals(0, filteredByDueDate.size());
     }
 }

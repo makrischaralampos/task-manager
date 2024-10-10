@@ -16,7 +16,11 @@ public class TaskManager {
 
     // Add a new task
     public void addTask(Task task) {
-        tasks.add(task);
+        if (task.getDescription() != null && task.getTitle() != null) {
+            tasks.add(task);
+        } else {
+            throw new IllegalArgumentException("Invalid title or description. Please enter a valid title and description.");
+        }
     }
 
     // Get all tasks
@@ -34,8 +38,12 @@ public class TaskManager {
         Optional<Task> taskOptional = getTaskById(id);
         if (taskOptional.isPresent()) {
             Task task = taskOptional.get();
-            task.updateTask(newTitle, newDescription, newDueDate, newPriority, newStatus);
-            return true;
+            if (newTitle != null) {
+                task.updateTask(newTitle, newDescription, newDueDate, newPriority, newStatus);
+                return true;
+            } else {
+                throw new IllegalArgumentException("Invalid title. Please enter a valid title.");
+            }
         } else {
             System.out.println("Error: Task with ID " + id + " does not exist.");
             return false;
