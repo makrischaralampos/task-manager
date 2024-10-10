@@ -54,29 +54,84 @@ TaskManagementApp/
 
 ### Steps to Setup the Project
 
-1. **Clone the repository**:
+1. **Clone the repository**
+
+To get started, clone the repository to you local machine using Git. Open your terminal and run the following command:
 
 ```bash
 git clone https://github.com/makrischaralampos/task-manager.git
+```
+
+Navigate into the project directory:
+
+```bash
 cd task-management-app
 ```
 
-2. **Build the project using Maven**: Maven will download dependencies and compile the project.
+2. **Build the Project with Maven**
+
+Once inside the project directory, build the project using Maven.
+This will download the required dependencies (e.g., JUnit, Lombok) and compile the Java code.
+
+To clean and build the project, run the following command:
 
 ```bash
 mvn clean install
 ```
 
-3. **Run Unit Tests**: To run the unit tests and ensure everything is working:
+This command will:
+
+- Clean the previous build (if any).
+- Download dependencies specified in `pom.xml`.
+- Compile the project code.
+
+If the build is successful, Maven will display a `BUILD SUCCESS` message.
+
+3. **Run Unit Tests (Optional)**
+
+Before running the application, you can verify that everything is functioning correctly by running the unit tests:
 
 ```bash
 mvn test
 ```
 
-4. **Run the Application**: Run the main class `TaskManagementApp` from the command line:
+This will run all the JUnit tests to ensure the core operations
+(add, update, delete, sort, filter tasks) work as expected.
+
+4. **Run the Application**
+
+After building the project, you can run the application using Maven. 
+The app's entry point is the `TaskManagementApp` class. To execute the app, use the following command:
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.example.TaskManagementApp"
+```
+
+**Example Commands**
+
+```bash
+Welcome to the Task Management App!
+Please choose an action:
+1. Add Task
+2. View All Tasks
+3. Update Task
+4. Delete Task
+5. Sort Tasks by Priority
+6. Sort Tasks by Due Date
+7. Filter Tasks by High Priority
+8. Filter Tasks Due This Week
+9. Exit
+```
+
+5. **Commit and Push Changes (Optional)**
+
+If you make changes to the project and want to push them to your remote Git repository,
+you can commit and push the changes:
+
+```bash
+git add .
+git commit -m "Your commit message here"
+git push origin main
 ```
 
 ## Usage
